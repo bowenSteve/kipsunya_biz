@@ -1,0 +1,89 @@
+marketplace-platform/
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── vendor/
+│   │   │   │   ├── Dashboard.jsx
+│   │   │   │   ├── ProductManager.jsx
+│   │   │   │   ├── SubscriptionPlans.jsx
+│   │   │   │   ├── Analytics.jsx          # Lead tracking
+│   │   │   │   └── ContactRequests.jsx
+│   │   │   ├── customer/
+│   │   │   │   ├── ProductGrid.jsx
+│   │   │   │   ├── SearchFilters.jsx
+│   │   │   │   ├── ProductCard.jsx
+│   │   │   │   └── ContactModal.jsx       # Lead capture form
+│   │   │   └── shared/
+│   │   │       ├── LocationPicker.jsx     # Regional filtering
+│   │   │       └── TierBadges.jsx         # Premium/Featured badges
+│   │   ├── pages/
+│   │   │   ├── vendor/
+│   │   │   │   ├── register.jsx
+│   │   │   │   ├── dashboard.jsx
+│   │   │   │   └── subscription.jsx
+│   │   │   ├── customer/
+│   │   │   │   ├── marketplace.jsx
+│   │   │   │   ├── search.jsx
+│   │   │   │   └── product-detail.jsx
+│   │   └── services/
+│   │       ├── subscriptionApi.js
+│   │       ├── leadsApi.js
+│   │       └── searchApi.js
+│
+├── server/
+│   ├── apps/
+│   │   ├── accounts/
+│   │   │   ├── models.py
+│   │   │   │   # CustomUser(AbstractUser)
+│   │   │   │   # - user_type: VENDOR/CUSTOMER
+│   │   │   │   # - region: CharField
+│   │   │   └── views.py         # Self-service registration
+│   │   │
+│   │   ├── vendors/
+│   │   │   ├── models.py
+│   │   │   │   # VendorProfile
+│   │   │   │   # - business_name, description, contact_info
+│   │   │   │   # - region, verification_status
+│   │   │   │   # - current_subscription_tier
+│   │   │   └── serializers.py
+│   │   │
+│   │   ├── subscriptions/
+│   │   │   ├── models.py
+│   │   │   │   # SubscriptionTier (Basic/Premium/Featured)
+│   │   │   │   # - name, price, visibility_boost, features
+│   │   │   │   # VendorSubscription
+│   │   │   │   # - vendor, tier, start_date, end_date, active
+│   │   │   └── stripe_integration.py
+│   │   │
+│   │   ├── products/
+│   │   │   ├── models.py
+│   │   │   │   # Product
+│   │   │   │   # - vendor, title, description, images
+│   │   │   │   # - category, region, visibility_score
+│   │   │   │   # - created_at, updated_at, active
+│   │   │   └── search.py        # Ranking algorithm based on tiers
+│   │   │
+│   │   ├── leads/
+│   │   │   ├── models.py
+│   │   │   │   # ContactRequest
+│   │   │   │   # - customer_name, email, phone, message
+│   │   │   │   # - product, vendor, created_at, status
+│   │   │   └── views.py         # Lead capture & notification
+│   │   │
+│   │   └── analytics/
+│   │       ├── models.py
+│   │       │   # ProductView, ContactClick, RegionalStats
+│   │       └── reports.py       # ROI tracking for vendors
+│
+├── celery/
+│   ├── tasks/
+│   │   ├── subscription_management.py    # Auto-renewal, expiry
+│   │   ├── lead_notifications.py         # Email vendors about leads
+│   │   └── analytics_processing.py       # Daily/weekly reports
+│
+└── media/
+    └── product_images/                   # Vendor uploaded images
+    
+    
+    
+    
