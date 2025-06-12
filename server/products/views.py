@@ -76,6 +76,31 @@ def featured_products(request):
         'featured_products': serializer.data
     })
 
+# UPDATED: Changed from slug to ID
+@api_view(['GET'])
+def product_by_id(request, id):
+    """
+    API endpoint that returns a single product by ID.
+    """
+    try:
+        product = Product.objects.select_related('category').get(id=id, is_active=True)
+        serializer = ProductSerializer(product)
+        return Response({
+            'success': True,
+            'product': serializer.data
+        })
+    except Product.DoesNotExist:
+        return Response({
+            'success': False,
+            'message': 'Product not found'
+        }, status=404)
+    except ValueError:
+        return Response({
+            'success': False,
+            'message': 'Invalid product ID'
+        }, status=400)
+
+# Keep the slug version if you want both options
 @api_view(['GET'])
 def product_by_slug(request, slug):
     """
