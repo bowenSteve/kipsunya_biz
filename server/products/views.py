@@ -1,5 +1,7 @@
+# products/views.py - Updated with minimal changes to make endpoints public
 from rest_framework import generics, filters
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes  # Add permission_classes import
+from rest_framework.permissions import AllowAny  # Add this import
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Product, Category
@@ -11,6 +13,7 @@ class AllProductsView(generics.ListAPIView):
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [AllowAny]  # ADD THIS LINE to make it public
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     
     # Filtering options
@@ -48,6 +51,7 @@ class AllProductsView(generics.ListAPIView):
 
 # Alternative function-based view (simpler approach)
 @api_view(['GET'])
+@permission_classes([AllowAny])  # ADD THIS LINE to make it public
 def all_products_simple(request):
     """
     Simple API endpoint that returns all products.
@@ -63,6 +67,7 @@ def all_products_simple(request):
 
 # Additional endpoints you might need
 @api_view(['GET'])
+@permission_classes([AllowAny])  # ADD THIS LINE to make it public
 def featured_products(request):
     """
     API endpoint that returns only featured products.
@@ -78,6 +83,7 @@ def featured_products(request):
 
 # UPDATED: Changed from slug to ID
 @api_view(['GET'])
+@permission_classes([AllowAny])  # ADD THIS LINE to make it public
 def product_by_id(request, id):
     """
     API endpoint that returns a single product by ID.
@@ -102,6 +108,7 @@ def product_by_id(request, id):
 
 # Keep the slug version if you want both options
 @api_view(['GET'])
+@permission_classes([AllowAny])  # ADD THIS LINE to make it public
 def product_by_slug(request, slug):
     """
     API endpoint that returns a single product by slug.
@@ -120,6 +127,7 @@ def product_by_slug(request, slug):
         }, status=404)
 
 @api_view(['GET'])
+@permission_classes([AllowAny])  # ADD THIS LINE to make it public
 def categories(request):
     """
     API endpoint that returns all categories.
