@@ -49,7 +49,15 @@ INSTALLED_APPS = [
     # Your apps
     'products',
     'authentication',                     # Add this (your new auth app)
+    'orders',
 ]
+
+DEFAULT_COMMISSION_RATE = 15.0
+DEFAULT_TAX_RATE = 16.0
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For development
+DEFAULT_FROM_EMAIL = 'noreply@kipsunya.com'
+
+
 
 # Updated REST Framework configuration
 REST_FRAMEWORK = {

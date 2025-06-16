@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('products.urls')),
     path('api/auth/', include('authentication.urls')),  # Add this line for authentication
+    path('api/orders/', include('orders.urls')) 
 ]
