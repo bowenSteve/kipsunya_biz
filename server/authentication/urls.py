@@ -16,6 +16,7 @@ urlpatterns = [
     
     # Alternative JWT endpoints (if you prefer class-based views)
     path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('upgrade-to-vendor/', views.upgrade_to_vendor, name='upgrade_to_vendor')
 ]
 
 # Update your main server/urls.py to include authentication URLs
@@ -28,5 +29,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('products.urls')),
     path('api/auth/', include('authentication.urls')),  # Add this line
+
 ]
 """
