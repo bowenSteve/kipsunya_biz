@@ -41,7 +41,6 @@ class OrderListCreateView(generics.ListCreateAPIView):
         queryset = Order.objects.select_related('customer').prefetch_related(
             'items__vendor', 'status_history', 'refunds'
         )
-        
         # Role-based filtering
         if user.role == 'customer':
             queryset = queryset.filter(customer=user)
@@ -1215,3 +1214,4 @@ def _get_inventory_turnover(items):
             total_qty=Sum('quantity')
         ).aggregate(avg=Avg('total_qty'))['avg'] or 0
     }
+

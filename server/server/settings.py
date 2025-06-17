@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'products',
     'authentication',                     # Add this (your new auth app)
     'orders',
+    'cart',
 ]
 
 DEFAULT_COMMISSION_RATE = 15.0

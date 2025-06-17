@@ -4,6 +4,7 @@ from django.contrib.auth.models import User  # Use Django's built-in User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
 import uuid
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # DO NOT define a User model here - use Django's built-in User
 
@@ -113,10 +114,17 @@ class Order(models.Model):
         ).distinct()
 
 
+# Complete fix for orders/models.py - Replace the entire OrderItem class
+
+from decimal import Decimal
+import uuid
+from django.db import models
+from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 class OrderItem(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-    # product = models.ForeignKey('products.Product', on_delete=models.CASCADE)  # Uncomment when you have products app
     vendor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sold_items')
     
     # Item details at time of purchase
@@ -126,15 +134,15 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     total_price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     
-    # Commission and earnings
+    # Commission and earnings - FIXED: Ensure all default values are Decimal
     commission_rate = models.DecimalField(
         max_digits=5, 
         decimal_places=2, 
-        default=15.00,
+        default=Decimal('15.00'),  # FIXED: Use Decimal instead of 15.00
         validators=[MinValueValidator(0), MaxValueValidator(100)]
     )
-    platform_commission = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    vendor_earnings = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    platform_commission = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0'))  # FIXED
+    vendor_earnings = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0'))  # FIXED
     
     # Product snapshot data
     product_image = models.URLField(blank=True, null=True)
@@ -154,13 +162,18 @@ class OrderItem(models.Model):
         return f"{self.product_name} x{self.quantity} - {self.order.order_number}"
 
     def save(self, *args, **kwargs):
-        # Calculate totals
-        self.total_price = self.unit_price * self.quantity
-        self.platform_commission = (self.total_price * self.commission_rate) / 100
+        # Calculate totals - FIXED: Ensure all values are Decimal
+        unit_price = Decimal(str(self.unit_price))
+        commission_rate = Decimal(str(self.commission_rate))
+        
+        # Calculate total price
+        self.total_price = unit_price * self.quantity
+        
+        # Calculate commission and earnings using Decimal arithmetic
+        self.platform_commission = (self.total_price * commission_rate) / Decimal('100')
         self.vendor_earnings = self.total_price - self.platform_commission
         
         super().save(*args, **kwargs)
-
 
 class OrderStatusHistory(models.Model):
     """Track order status changes"""

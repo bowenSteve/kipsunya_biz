@@ -570,3 +570,16 @@ Kipsunya Biz System
         
     except Exception as e:
         logger.error(f"Failed to send admin notification: {str(e)}")
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def vendor_detail(request, vendor_id):
+    """
+    Get vendor details - only for authenticated users
+    """
+    vendor = get_object_or_404(User, id=vendor_id, profile__role='vendor')
+    serializer = VendorSerializer(vendor)
+    return Response({
+        'success': True,
+        'vendor': serializer.data
+    })

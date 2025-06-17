@@ -1,4 +1,6 @@
+# products/models.py - UPDATED VERSION
 from django.db import models
+from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from decimal import Decimal
 
@@ -24,6 +26,16 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
+    
+    # ADD VENDOR FIELD - with null=True initially for safe migration
+    vendor = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='products',
+        help_text="The vendor/seller of this product",
+        null=True,  # Allow null initially for existing products
+        blank=True  # Allow blank in admin forms initially
+    )
     
     # Pricing
     price = models.DecimalField(
@@ -54,12 +66,15 @@ class Product(models.Model):
         ordering = ['-created_at']
         indexes = [
             models.Index(fields=['category', 'in_stock']),
+            models.Index(fields=['vendor', 'is_active']),  # ADD vendor index
             models.Index(fields=['price']),
             models.Index(fields=['-created_at']),
         ]
     
     def __str__(self):
-        return self.name
+        # Update to include vendor info when available
+        vendor_info = f" - {self.vendor.get_full_name()}" if self.vendor else ""
+        return f"{self.name}{vendor_info}"
     
     @property
     def is_available(self):
