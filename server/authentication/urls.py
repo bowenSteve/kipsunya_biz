@@ -13,6 +13,7 @@ urlpatterns = [
     
     # User profile endpoints
     path('profile/', views.update_profile, name='update_profile'),
+    path('upgrade-to-vendor/', views.upgrade_to_vendor, name='upgrade-to-vendor'),
     
     # Alternative JWT endpoints (if you prefer class-based views)
     path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
