@@ -12,6 +12,7 @@ djangorestframework-simplejwt = "*"
 redis = ">=4.5.0"
 celery = ">=5.3.0"
 psycopg2-binary = "*"
+django-extensions = "*"
 
 [dev-packages]
 
